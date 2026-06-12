@@ -1,92 +1,134 @@
-# tron2-mujoco-sim
+# tron2-mujoco-sim 使用说明
 
+## 1. 运行仿真
 
+### Step 1: 打开终端
 
-## Getting started
+### Step 2: 克隆仓库
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin http://gitlab-gitlab-ce1/rhys/tron2-mujoco-sim.git
-git branch -M master
-git push -uf origin master
+```bash
+git clone --recurse-submodules https://github.com/limxdynamics/tron2-mujoco-sim.git
 ```
 
-## Integrate with your tools
+### Step 3: 安装 Python 依赖
 
-- [ ] [Set up project integrations](http://gitlab-gitlab-ce1/rhys/tron2-mujoco-sim/-/settings/integrations)
+```bash
+pip install -U pip
+pip install mujoco numpy scipy pyyaml onnxruntime pygame
+```
 
-## Collaborate with your team
+### Step 4: 安装 LimX SDK（必须）
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+根据机器架构安装 SDK wheel（示例）：
 
-## Test and Deploy
+```bash
+# x86_64
+pip install limxsdk-lowlevel/python3/amd64/limxsdk-*-py3-none-any.whl
 
-Use the built-in continuous integration in GitLab.
+# aarch64
+pip install limxsdk-lowlevel/python3/aarch64/limxsdk-*-py3-none-any.whl
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Step 5: 设置机器人型号
 
-***
+当前支持：
 
-# Editing this README
+- `SF_TRON2A`
+- `WF_TRON2A`
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+示例：
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```bash
+export ROBOT_TYPE=SF_TRON2A
+```
 
-## Name
-Choose a self-explaining name for your project.
+### Step 6: 启动 MuJoCo 仿真器
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+cd tron2-mujoco-sim
+python3 simulator.py
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+可选：指定 SDK 通信 IP（默认 `127.0.0.1`）：
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+```bash
+python3 simulator.py 127.0.0.1
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+---
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## 2. 运行控制器
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Step 1: 打开新终端
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+### Step 2: 启动 ONNX 控制入口
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```bash
+cd tron2-rl-deploy-python
+export ROBOT_TYPE=SF_TRON2A
+python3 main.py
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+可选：指定机器人 IP（和 tron1 用法一致）：
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```bash
+python3 main.py 10.192.1.2
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### Step 3: 手柄控制说明
 
-## License
-For open source projects, say how it is licensed.
+- `L1 + Y`：切换到 WALK
+- `L1 + X`：切回 IDLE
+- `R1`：清空速度指令
+- 打开一个 Bash 终端。
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- 运行 robot-joystick：
+
+  ```
+  ./robot-joystick/robot-joystick
+  ```
+---
+
+## 3. 模型文件位置
+
+
+请将 ONNX 模型按机型放在：
+
+- `tron2-rl-deploy-python/controllers/model/<ROBOT_TYPE>/policy.onnx`
+- `tron2-rl-deploy-python/controllers/model/<ROBOT_TYPE>/encoder.onnx`
+- `tron2-rl-deploy-python/controllers/model/<ROBOT_TYPE>/params.yaml`
+
+例如：
+
+- `tron2-rl-deploy-python/controller/model/SF_TRON2A/...`
+- `tron2-rl-deploy-python/controller/model/WF_TRON2A/...`
+
+---
+
+## 4. 效果展示
+
+### 仿真部署 (Simulation)
+
+![SF Simulation](doc/sfmj-ezgif.com-video-to-gif-converter.gif)
+![WF Simulation](doc/wfmj-ezgif.com-video-to-gif-converter.gif)
+
+### 实机部署 (Real-world)
+
+实机部署时请悬挂启动控制器
+
+![Deploy](doc/deploy.jpg)
+
+![SF Real-world](doc/sf.GIF)
+![WF Real-world](doc/wf.GIF)
+
+
+## 5. 常见问题
+
+- `ROBOT_TYPE not set`：先执行 `export ROBOT_TYPE=...`
+- `Model not found`：检查 `controller/model/<ROBOT_TYPE>/` 下模型文件是否齐全
+- `No module named limxsdk`：SDK wheel 未安装到当前 Python 环境
+- `RobotState has not been received yet`：通常是仿真器没启动，或仿真与控制器的 `ROBOT_TYPE` 不一致
+
+## 6. License
+
+[Apache 2.0](LICENSE)
