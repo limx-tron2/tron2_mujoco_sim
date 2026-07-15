@@ -1,0 +1,160 @@
+# SPDX-License-Identifier: Apache-2.0
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-scan:
+    name: Lint / license & sensitivity scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install lint tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff pyflakes
+
+      - name: Python byte-compile (repo-owned .py only)
+        run: |
+          set -e
+          # Only compile files that live in this repository — never
+          # inside a submodule checkout (submodules have their own CI).
+          mapfile -d '' files < <(find . -type f -name '*.py' \
+              -not -path './.git/*' \
+              -not -path './robot-description/*' \
+              -not -path './robot-joystick/*' \
+              -not -path './limxsdk-lowlevel/*' \
+              -not -path './__pycache__/*' \
+              -print0)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::warning::No repo-owned .py files found to compile"
+          else
+            for f in "${files[@]}"; do
+              echo "── py_compile $f"
+              python -m py_compile "$f"
+            done
+          fi
+
+      - name: Ruff lint
+        run: |
+          set -e
+          ruff check --exclude robot-description --exclude robot-joystick \
+                     --exclude limxsdk-lowlevel --exclude __pycache__ .
+
+      - name: pyflakes (fallback lint)
+        run: |
+          set -e
+          find . -type f -name '*.py' \
+              -not -path './.git/*' \
+              -not -path './robot-description/*' \
+              -not -path './robot-joystick/*' \
+              -not -path './limxsdk-lowlevel/*' \
+              -not -path './__pycache__/*' \
+              -print0 | xargs -0 -r pyflakes
+
+      - name: Submodule manifest is non-empty
+        run: |
+          set -e
+          # We do not initialize submodules in CI (their content is not
+          # ours to test), but .gitmodules and `git submodule status`
+          # must still declare them so users see the correct pins.
+          if ! [ -s .gitmodules ]; then
+            echo "::error::.gitmodules is missing or empty"
+            exit 1
+          fi
+          # `git submodule status --recursive` lists declared entries
+          # even when they are not checked out (prefixed with '-').
+          status_out=$(git submodule status --recursive || true)
+          echo "$status_out"
+          if [ -z "$status_out" ]; then
+            echo "::error::git submodule status --recursive produced no output"
+            exit 1
+          fi
+
+      - name: MuJoCo import smoke test (best-effort)
+        continue-on-error: true
+        run: |
+          set -e
+          pip install "mujoco>=2.3" || {
+            echo "::warning::MuJoCo is not installable in this environment; skipping import smoke test"
+            exit 0
+          }
+          python -c "import mujoco; print('mujoco', mujoco.__version__)"
+
+      - name: EXIF sanity on doc media
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libimage-exiftool-perl
+          set -e
+          bad=0
+          shopt -s nullglob
+          for img in doc/*.jpg doc/*.jpeg doc/*.png doc/*.gif doc/*.GIF; do
+            [ -f "$img" ] || continue
+            hits=$(exiftool "$img" | grep -iE '(gps|serial|author|artist|owner)' || true)
+            if [ -n "$hits" ]; then
+              echo "::error file=$img::EXIF discloses $hits"
+              bad=$((bad+1))
+            fi
+          done
+          if [ $bad -ne 0 ]; then exit 1; fi
+
+      - name: Private-IP scan (with allowlist)
+        run: |
+          set -e
+          # RFC1918 private ranges, link-local, and internal ranges.
+          # ALLOWLIST:
+          #   - 127.0.0.1  documented loopback default for the sim SDK.
+          #   - 10.192.1.2 documented internal example in README.md;
+          #                pending owner sign-off (see CHANGELOG.md).
+          hits=$(grep -R -nE \
+              '(^|[^0-9])(10\.[0-9]+\.[0-9]+\.[0-9]+|172\.(1[6-9]|2[0-9]|3[0-1])\.[0-9]+\.[0-9]+|192\.168\.[0-9]+\.[0-9]+|169\.254\.[0-9]+\.[0-9]+)([^0-9]|$)' \
+              --include='*.md' --include='*.py' --include='*.yml' --include='*.yaml' \
+              --exclude-dir=.git --exclude-dir=robot-description \
+              --exclude-dir=robot-joystick --exclude-dir=limxsdk-lowlevel \
+              --exclude-dir=__pycache__ \
+              . || true)
+          # Strip allowlisted matches
+          filtered=$(echo "$hits" | grep -vE '10\.192\.1\.2' || true)
+          if [ -n "$filtered" ]; then
+            echo "::error::Unlisted private-IP address found; add to allowlist or replace with a placeholder:"
+            echo "$filtered"
+            exit 1
+          fi
+
+      - name: Forbid committing build / model / SDK artefacts
+        run: |
+          set -e
+          # __pycache__/ and *.pyc are Python cache and must not be
+          # committed. Model weights, SDK binaries, wheels, and bag
+          # files must not live in this repository.
+          bad=$(git ls-files | grep -iE '(^|/)__pycache__(/|$)|\.(pyc|pyo|onnx|pt|pth|ckpt|so|dll|dylib|lib|whl|bag|mcap)$' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Repository must not contain caches, models, SDK binaries, wheels, or bag files:"
+            echo "$bad"
+            exit 1
+          fi
+
+      - name: Unresolved license / TODO scan
+        run: |
+          set -e
+          if grep -rniE 'proprietary|confidential|todo: license|unknown license' \
+               README.md THIRD_PARTY_NOTICES.md CHANGELOG.md CONTRIBUTING.md SECURITY.md NOTICE; then
+            echo "::error::Unresolved license / provenance markers in top-level docs"
+            exit 1
+          fi

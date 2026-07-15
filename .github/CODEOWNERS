@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# CODEOWNERS for tron2-mujoco-sim
+#
+# Order matters: the LAST matching pattern wins for each file.
+# Replace the placeholder handles below with real GitHub logins before
+# enabling branch protection that requires code-owner review.
+
+# Default owners: repo maintainers / meta files
+*                                       @limx-tron2/maintainers
+
+# Open-source scaffolding & policy
+/LICENSE                                @limx-tron2/legal @limx-tron2/maintainers
+/NOTICE                                 @limx-tron2/legal @limx-tron2/maintainers
+/THIRD_PARTY_NOTICES.md                 @limx-tron2/legal @limx-tron2/maintainers
+/SECURITY.md                            @limx-tron2/security @limx-tron2/robotics
+/CONTRIBUTING.md                        @limx-tron2/maintainers
+/CHANGELOG.md                           @limx-tron2/maintainers
+
+# Simulator core — SDK bridge and MuJoCo model loading.
+# Changes here can affect the sim-vs-real boundary, so both the
+# simulator owners and the SDK / robotics owners must review.
+/simulator.py                           @limx-tron2/sim @limx-tron2/sdk @limx-tron2/robotics
+
+# Submodule declarations — a pin change is a supply-chain change.
+/.gitmodules                            @limx-tron2/legal @limx-tron2/sdk @limx-tron2/maintainers
+
+# CI / templates
+/.github/                               @limx-tron2/maintainers
+/.github/workflows/                     @limx-tron2/maintainers @limx-tron2/security
+
+# Documentation media (owner audit before merge)
+/doc/                                   @limx-tron2/content @limx-tron2/legal
+/README.md                              @limx-tron2/maintainers @limx-tron2/robotics

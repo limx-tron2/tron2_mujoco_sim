@@ -1,0 +1,57 @@
+# --- Python build / cache artefacts ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+
+# --- virtualenvs ---
+.venv/
+venv/
+env/
+.env
+
+# --- editor / OS junk ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- excluded artifacts (must never ship in this repo) ---
+# Models, weights, checkpoints
+*.onnx
+*.pt
+*.pth
+*.ckpt
+# Native / SDK binaries and wheels
+*.so
+*.so.*
+*.dll
+*.dylib
+*.lib
+*.a
+*.whl
+# Bag / capture data
+*.bag
+*.mcap
+
+# --- generated / scratch ---
+/tmp/
+/out/
+*.log

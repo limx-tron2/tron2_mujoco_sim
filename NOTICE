@@ -1,0 +1,21 @@
+TRON2 MuJoCo simulator
+Copyright (c) 2024-2026 LimX Dynamics Inc.
+
+This product contains a Python MuJoCo-based simulator (`simulator.py`) that
+bridges the LimX low-level SDK (`RobotCmd` / `RobotState`, with q / dq / tau /
+Kp / Kd) to a MuJoCo `MjModel` / `MjData` simulation of the TRON2A humanoid
+platform, together with the accompanying documentation and media.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may
+not use these files except in compliance with the License. You may obtain
+a copy of the License in the LICENSE file at the root of this repository,
+or at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+This repository consumes three git submodules — `robot-description`,
+`robot-joystick`, and `limxsdk-lowlevel` — which are not vendored here and
+carry their own licenses. Their status, provenance, and re-distribution
+terms are tracked in THIRD_PARTY_NOTICES.md and are pending owner
+sign-off. Runtime dependencies (MuJoCo, onnxruntime, NumPy, SciPy,
+PyYAML, pygame) are neither vendored nor packaged in this repository.
