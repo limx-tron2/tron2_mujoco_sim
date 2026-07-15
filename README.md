@@ -3,7 +3,9 @@
   SPDX-License-Identifier: Apache-2.0
 -->
 
-# tron2-mujoco-sim 使用说明
+[English](README.md) | [中文](README_zh-CN.md)
+
+# tron2-mujoco-sim
 
 MuJoCo-based simulator for the TRON2A humanoid platform. `simulator.py`
 bridges the LimX low-level SDK (`RobotCmd` / `RobotState` with
@@ -34,7 +36,10 @@ SPDX identifier: `Apache-2.0`.
 - `simulator.py` — MuJoCo simulator and LimX SDK bridge.
 - Documentation (`README.md`, `doc/*.jpg`, `doc/*.gif`, `doc/*.GIF`).
 - Submodule **declarations** (via `.gitmodules`) — three submodules
-  are pinned by commit and must be initialized separately.
+  are pinned by commit and must be initialized separately:
+  - `robot-description/` — URDF / MJCF meshes and models.
+  - `robot-joystick/` — gamepad helper binary.
+  - `limxsdk-lowlevel/` — LimX low-level SDK (with prebuilt wheels).
 
 **Not included — by design:**
 
@@ -46,20 +51,21 @@ SPDX identifier: `Apache-2.0`.
 - ONNX control policies (`.onnx`, `.pt`, `.pth`, `.ckpt`). The
   simulator does not load them directly; the deploy stack in the
   sibling repository **`tron2-rl-deploy-python`** does — see
-  [§3 model file locations](#3-模型文件位置).
+  [§3 Model file locations](#3-model-file-locations).
 - SDK binaries (`.so`, `.dll`) or wheels (`.whl`) directly in this
   tree. SDK wheels live under the `limxsdk-lowlevel` submodule.
 - Factory calibration values, firmware, motion / bag data.
 
-The internal example IP referenced in [§2 running the controller](#2-运行控制器)
-(`10.192.1.2`) is an **internal example, pending owner sign-off** for
-public release; replace it with your own robot's address before use.
+The internal example IP referenced in
+[§2 Running the controller](#2-running-the-controller) (`10.192.1.2`)
+is an **internal example, pending owner sign-off** for public
+release; replace it with your own robot's address before use.
 
-## 1. 运行仿真
+## 1. Running the simulator
 
-### Step 1: 打开终端
+### Step 1: Open a terminal
 
-### Step 2: 克隆仓库
+### Step 2: Clone the repository
 
 ```bash
 git clone --recurse-submodules https://github.com/limx-tron2/tron2-mujoco-sim.git
@@ -72,16 +78,17 @@ cd tron2-mujoco-sim
 git submodule update --init --recursive
 ```
 
-### Step 3: 安装 Python 依赖
+### Step 3: Install Python dependencies
 
 ```bash
 pip install -U pip
 pip install mujoco numpy scipy pyyaml onnxruntime pygame
 ```
 
-### Step 4: 安装 LimX SDK（必须）
+### Step 4: Install the LimX SDK (required)
 
-根据机器架构安装 SDK wheel（示例）：
+Install the SDK wheel that matches your machine architecture
+(example):
 
 ```bash
 # x86_64
@@ -91,27 +98,27 @@ pip install limxsdk-lowlevel/python3/amd64/limxsdk-*-py3-none-any.whl
 pip install limxsdk-lowlevel/python3/aarch64/limxsdk-*-py3-none-any.whl
 ```
 
-### Step 5: 设置机器人型号
+### Step 5: Choose the robot type
 
-当前支持：
+Currently supported:
 
 - `SF_TRON2A`
 - `WF_TRON2A`
 
-示例：
+Example:
 
 ```bash
 export ROBOT_TYPE=SF_TRON2A
 ```
 
-### Step 6: 启动 MuJoCo 仿真器
+### Step 6: Launch the MuJoCo simulator
 
 ```bash
 cd tron2-mujoco-sim
 python3 simulator.py
 ```
 
-可选：指定 SDK 通信 IP（默认 `127.0.0.1`）：
+Optional — specify the SDK communication IP (default `127.0.0.1`):
 
 ```bash
 python3 simulator.py 127.0.0.1
@@ -119,11 +126,11 @@ python3 simulator.py 127.0.0.1
 
 ---
 
-## 2. 运行控制器
+## 2. Running the controller
 
-### Step 1: 打开新终端
+### Step 1: Open a new terminal
 
-### Step 2: 启动 ONNX 控制入口
+### Step 2: Launch the ONNX controller entry point
 
 ```bash
 cd tron2-rl-deploy-python
@@ -131,7 +138,7 @@ export ROBOT_TYPE=SF_TRON2A
 python3 main.py
 ```
 
-可选：指定机器人 IP（和 tron1 用法一致）：
+Optional — specify the robot IP (same convention as tron1):
 
 ```bash
 # NOTE: 10.192.1.2 is an INTERNAL EXAMPLE, pending owner sign-off for
@@ -140,46 +147,46 @@ python3 main.py
 python3 main.py 10.192.1.2
 ```
 
-### Step 3: 手柄控制说明
+### Step 3: Gamepad control
 
-- `L1 + Y`：切换到 WALK
-- `L1 + X`：切回 IDLE
-- `R1`：清空速度指令
-- 打开一个 Bash 终端。
+- `L1 + Y`: switch to WALK
+- `L1 + X`: switch back to IDLE
+- `R1`: clear velocity commands
+- Open a Bash terminal.
 
-- 运行 robot-joystick：
+- Run `robot-joystick`:
 
   ```
   ./robot-joystick/robot-joystick
   ```
 ---
 
-## 3. 模型文件位置
+## 3. Model file locations
 
-
-请将 ONNX 模型按机型放在：
+Place the ONNX models under the directory matching each robot type:
 
 - `tron2-rl-deploy-python/controllers/model/<ROBOT_TYPE>/policy.onnx`
 - `tron2-rl-deploy-python/controllers/model/<ROBOT_TYPE>/encoder.onnx`
 - `tron2-rl-deploy-python/controllers/model/<ROBOT_TYPE>/params.yaml`
 
-例如：
+For example:
 
 - `tron2-rl-deploy-python/controller/model/SF_TRON2A/...`
 - `tron2-rl-deploy-python/controller/model/WF_TRON2A/...`
 
 ---
 
-## 4. 效果展示
+## 4. Screenshots / GIFs
 
-### 仿真部署 (Simulation)
+### Simulation
 
 ![SF Simulation](doc/sfmj-ezgif.com-video-to-gif-converter.gif)
 ![WF Simulation](doc/wfmj-ezgif.com-video-to-gif-converter.gif)
 
-### 实机部署 (Real-world)
+### Real-world deployment
 
-实机部署时请悬挂启动控制器
+For real-robot deployment, suspend the robot before launching the
+controller.
 
 ![Deploy](doc/deploy.jpg)
 
@@ -187,14 +194,18 @@ python3 main.py 10.192.1.2
 ![WF Real-world](doc/wf.GIF)
 
 
-## 5. 常见问题
+## 5. FAQ
 
-- `ROBOT_TYPE not set`：先执行 `export ROBOT_TYPE=...`
-- `Model not found`：检查 `controller/model/<ROBOT_TYPE>/` 下模型文件是否齐全
-- `No module named limxsdk`：SDK wheel 未安装到当前 Python 环境
-- `RobotState has not been received yet`：通常是仿真器没启动，或仿真与控制器的 `ROBOT_TYPE` 不一致
+- `ROBOT_TYPE not set`: run `export ROBOT_TYPE=...` first.
+- `Model not found`: check that all model files under
+  `controller/model/<ROBOT_TYPE>/` are present.
+- `No module named limxsdk`: the SDK wheel is not installed into
+  the active Python environment.
+- `RobotState has not been received yet`: usually means the
+  simulator is not running, or the simulator and the controller
+  disagree on `ROBOT_TYPE`.
 
-## 6. Verification
+## Verification
 
 The commands below are the same ones CI runs (see
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)); running them
@@ -228,7 +239,7 @@ export ROBOT_TYPE=SF_TRON2A
 python3 simulator.py 127.0.0.1
 ```
 
-## 7. Cite & support
+## Cite & support
 
 If you use this simulator in academic or public work, please cite the
 repository:
@@ -249,8 +260,3 @@ repository:
 - **Security reports:** email `contact@limxdynamics.com`; see
   [`SECURITY.md`](SECURITY.md) for the sim-vs-real boundary note.
 - **Company / commercial contact:** <https://www.limxdynamics.com>.
-
-## 8. License
-
-[Apache 2.0](LICENSE) — see also [`NOTICE`](NOTICE) and
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
