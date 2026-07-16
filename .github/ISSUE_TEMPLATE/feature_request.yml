@@ -1,0 +1,43 @@
+name: Feature request
+description: Propose an improvement to the public simulator
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What simulation or development problem should be solved?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the desired behavior and alternatives considered.
+    validations:
+      required: true
+  - type: dropdown
+    id: behavior
+    attributes:
+      label: Does this affect robot, model, SDK, or safety behavior?
+      options:
+        - "No"
+        - "Yes"
+        - "Unsure"
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: External dependencies or assets
+      description: Identify any new SDK, model, data, binary, media, or licensing requirement.
+  - type: checkboxes
+    id: confidentiality
+    attributes:
+      label: Submission confirmation
+      options:
+        - label: This request contains no credentials, customer data, or confidential material.
+          required: true
+

@@ -1,0 +1,60 @@
+name: Bug report
+description: Report a reproducible simulator or documentation defect
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include credentials, private robot data, customer data, or confidential logs. Security vulnerabilities must follow SECURITY.md instead of a public issue.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest sequence that reproduces the problem.
+    validations:
+      required: true
+  - type: input
+    id: simulator_revision
+    attributes:
+      label: Simulator revision
+      description: Commit SHA or release tag.
+    validations:
+      required: true
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependency revisions
+      description: Python, MuJoCo, limxsdk, and robot-description versions or commits.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, CPU architecture, and relevant setup details.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      description: Remove credentials, private addresses, robot data, and confidential information.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope confirmation
+      options:
+        - label: I reproduced this in simulation and did not test unreviewed commands on real hardware.
+          required: true
+        - label: I removed credentials and confidential or customer information.
+          required: true
+

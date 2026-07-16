@@ -1,0 +1,4 @@
+[submodule "limxsdk-lowlevel"]
+	path = limxsdk-lowlevel
+	url = https://github.com/limxdynamics/limxsdk-lowlevel.git
+

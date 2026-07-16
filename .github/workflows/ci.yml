@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out simulator
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Check out robot description
+        uses: actions/checkout@v7
+        with:
+          repository: limx-tron2/robot-description
+          ref: 6ef32a33b9405e84a6551bc19d380f6747ea9611
+          path: robot-description
+          sparse-checkout: tron2/DACH_TRON2A
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install mujoco==3.10.0 "PyYAML>=5.4.1,<7"
+          python -m pip install limxsdk-lowlevel/python3/amd64/limxsdk-4.0.2-py3-none-any.whl
+
+      - name: Validate Python and SDK API
+        run: |
+          python -m py_compile simulator.py test_gripper_control.py
+          python -c "from limxsdk.robot import Robot; assert hasattr(Robot, 'subscribeGripperCmdForSim'); assert hasattr(Robot, 'publishGripperStateForSim')"
+
+      - name: Compile MuJoCo models
+        run: |
+          python -c "import mujoco; mujoco.MjModel.from_xml_path('robot-description/tron2/DACH_TRON2A/xml/robot.xml')"
+          python -c "import mujoco; m=mujoco.MjModel.from_xml_path('robot-description/tron2/DACH_TRON2A/xml/robot_grasper.xml'); assert mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_ACTUATOR, 'grasper_L_drive_Joint_ctrl') >= 0; assert mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_ACTUATOR, 'grasper_R_drive_Joint_ctrl') >= 0"

@@ -1,0 +1,15 @@
+gripper:
+  topics:
+    cmd:   "/limx/2F-gripper/cmd"
+    state: "/limx/2F-gripper/state"
+  # 夹爪按真实传动重构为单自由度连杆后，被驱动的是 revolute 的 drive 关节（弧度），
+  # 夹指 jaw 关节由 <equality> 多项式耦合跟随。以下均在 drive 关节域内标定。
+  joint_range:            # drive 关节行程 (rad)，q=0 -> q_low(闭合), q=100 -> q_high(全开)
+    q_low:  -0.09522
+    q_high:  0.77302
+  full_travel_time_s: 1.0 # v=100 时跑完全行程耗时 -> V_FULL = (q_high-q_low)/此值 (rad/s)
+  tau_min_n: 0.3          # tau=0 时的最小保持力矩 (N·m)，保证位置环始终托住夹爪不漂移
+  tau_full_n: 2.0         # tau=100 对应最大关节力矩 (N·m)，须 <= 执行器 ctrlrange 上限(2)
+  gains:                  # 仿真内部固定位置环增益（模拟夹爪固件，非 msg.kp/kd）
+    kp: 2.0               # 满行程误差(~0.87rad)对应约 1.7N·m，贴近力矩上限但不长期饱和
+    kd: 0.05

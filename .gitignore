@@ -1,0 +1,14 @@
+MUJOCO_LOG.TXT
+robot-description/
+robot-joystick/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+*.code-workspace
