@@ -5,6 +5,12 @@
 
 [English](README.md) | [中文](README_zh-CN.md)
 
+> **Distribution.** The primary public distribution point for this
+> repository is GitHub:
+> <https://github.com/limx-tron2/tron2-mujoco-sim>. The internal
+> LimX GitLab is a mirror; open issues, PRs, and security reports on
+> the GitHub repository.
+
 # tron2-mujoco-sim
 
 MuJoCo-based simulator for the TRON2A humanoid platform. `simulator.py`
@@ -56,10 +62,14 @@ SPDX identifier: `Apache-2.0`.
   tree. SDK wheels live under the `limxsdk-lowlevel` submodule.
 - Factory calibration values, firmware, motion / bag data.
 
-The internal example IP referenced in
-[§2 Running the controller](#2-running-the-controller) (`10.192.1.2`)
-is an **internal example, pending owner sign-off** for public
-release; replace it with your own robot's address before use.
+The `<robot-ip>` token referenced in
+[§2 Running the controller](#2-running-the-controller) is a
+**placeholder** — substitute your own robot or simulator IP before
+running. Nothing in this repository's source hard-codes a private
+IP. The internal-only sibling `tron2-rl-deploy-ros` retains a
+documentation-example literal `10.192.1.2` in its source / launch
+files, declared in that repo's `SECURITY.md`; this repository
+intentionally does not embed any such literal.
 
 ## 1. Running the simulator
 
@@ -141,10 +151,13 @@ python3 main.py
 Optional — specify the robot IP (same convention as tron1):
 
 ```bash
-# NOTE: 10.192.1.2 is an INTERNAL EXAMPLE, pending owner sign-off for
-# public release. Replace with your own robot's address before use;
-# see CHANGELOG.md → "Pending owner sign-off".
-python3 main.py 10.192.1.2
+# NOTE: <robot-ip> is a placeholder token — substitute your own
+# robot / simulator IP before running. Nothing in this repo's
+# source hard-codes a private IP. (The internal-only sibling
+# tron2-rl-deploy-ros retains a documentation-example literal
+# 10.192.1.2 in its source / launch files, declared in that
+# repo's SECURITY.md.)
+python3 main.py <robot-ip>
 ```
 
 ### Step 3: Gamepad control

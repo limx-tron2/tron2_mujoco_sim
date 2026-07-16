@@ -31,6 +31,22 @@ to a real robot. See `THIRD_PARTY_NOTICES.md` for the exclusion list.
 Control-path vulnerabilities in the deployment stack itself belong to
 `tron2-rl-deploy-python` / `tron2-rl-deploy-ros`, not here.
 
+## Private-IP handling
+
+`<robot-ip>` in this repository's Markdown / YAML command examples is
+a **placeholder token**, not a real address. Substitute your own
+robot or simulator IP before running. Nothing in this repository
+(including `simulator.py`, CI, or configuration) hard-codes a private
+IP; the SDK endpoint defaults to `127.0.0.1` and is overridable on
+the command line.
+
+The internal-only sibling repository `tron2-rl-deploy-ros` retains a
+documentation-example literal `10.192.1.2` in its source / launch
+files (e.g. `Tron2HW.cpp`, `tron2_hw_node.cpp`, `tron2_hw.launch`),
+kept per owner decision and declared in that repository's
+`SECURITY.md`. That literal is documented there and is not mirrored
+into this repository.
+
 ## Supported versions
 
 Only the tip of the `main` branch and the most recent tagged release

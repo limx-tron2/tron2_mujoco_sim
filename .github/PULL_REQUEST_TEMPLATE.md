@@ -56,8 +56,9 @@ forbidden-artifacts scan: ...
 - [ ] No calibration values, firmware, rosbags (`.bag`, `.mcap`), or
       customer data are added.
 - [ ] No new hard-coded IPs, hostnames, or credentials are introduced.
-      The existing `10.192.1.2` example remains untouched pending
-      owner sign-off (see `CHANGELOG.md`).
+      The `<robot-ip>` token that appears in `README.md` / docs is a
+      placeholder for users to substitute at run time; no source-side
+      private IP remains in this repository.
 - [ ] Any new / modified media under `doc/` has been EXIF-stripped and
       cleared for people / office / non-public product visibility.
 - [ ] `THIRD_PARTY_NOTICES.md` is up to date.

@@ -120,8 +120,11 @@ jobs:
           # RFC1918 private ranges, link-local, and internal ranges.
           # ALLOWLIST:
           #   - 127.0.0.1  documented loopback default for the sim SDK.
-          #   - 10.192.1.2 documented internal example in README.md;
-          #                pending owner sign-off (see CHANGELOG.md).
+          #   - 10.192.1.2 referenced only in Markdown prose that
+          #                points at the sibling tron2-rl-deploy-ros
+          #                repo (per its SECURITY.md). This repo does
+          #                not embed the literal in source; the
+          #                shipped placeholder token is <robot-ip>.
           hits=$(grep -R -nE \
               '(^|[^0-9])(10\.[0-9]+\.[0-9]+\.[0-9]+|172\.(1[6-9]|2[0-9]|3[0-1])\.[0-9]+\.[0-9]+|192\.168\.[0-9]+\.[0-9]+|169\.254\.[0-9]+\.[0-9]+)([^0-9]|$)' \
               --include='*.md' --include='*.py' --include='*.yml' --include='*.yaml' \

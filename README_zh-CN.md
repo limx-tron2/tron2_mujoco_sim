@@ -5,6 +5,10 @@
 
 [English](README.md) | [中文](README_zh-CN.md)
 
+> **发布渠道。** 本仓库的主发布点为 GitHub：
+> <https://github.com/limx-tron2/tron2-mujoco-sim>。
+> LimX 内部 GitLab 为镜像；Issue、PR 与安全报告请提交到 GitHub。
+
 # tron2-mujoco-sim 使用说明
 
 面向 TRON2A 人形平台的 MuJoCo 仿真器。`simulator.py` 将 LimX 底层
@@ -54,9 +58,11 @@ SDK（`RobotCmd` / `RobotState`，字段 `q` / `dq` / `tau` / `Kp` /
   本仓库；SDK wheel 位于 `limxsdk-lowlevel` 子模块中。
 - 工厂标定数据、固件、运动 / bag 数据。
 
-[§2 运行控制器](#2-运行控制器)中引用的内部示例 IP（`10.192.1.2`）
-为**内部示例，待负责人签字确认**方可公开发布；请在使用前替换
-为你自己机器人的地址。
+[§2 运行控制器](#2-运行控制器)中出现的 `<robot-ip>` 是**占位符**，
+运行前请替换为您自己机器人或仿真器的实际 IP。本仓库源码不包含任何
+硬编码的私网地址。仅内部使用的姊妹仓库 `tron2-rl-deploy-ros` 在其
+源码 / launch 文件中保留了一处作为文档示例的字面量 `10.192.1.2`，
+已在该仓库的 `SECURITY.md` 中声明；本仓库有意不含此类字面量。
 
 ## 1. 运行仿真
 
@@ -137,10 +143,12 @@ python3 main.py
 可选：指定机器人 IP（和 tron1 用法一致）：
 
 ```bash
-# 说明：10.192.1.2 是内部示例（INTERNAL EXAMPLE），待负责人签字
-# 确认后方可公开发布。请在使用前替换为你自己机器人的地址；
-# 参见 CHANGELOG.md → "Pending owner sign-off"。
-python3 main.py 10.192.1.2
+# 说明：<robot-ip> 是占位符，运行前请替换为您自己机器人 /
+# 仿真器的实际 IP。本仓库源码未硬编码任何私网地址。
+# （仅内部使用的姊妹仓库 tron2-rl-deploy-ros 在其源码 /
+# launch 文件中保留了作为文档示例的字面量 10.192.1.2，
+# 已在该仓库的 SECURITY.md 中声明。）
+python3 main.py <robot-ip>
 ```
 
 ### Step 3: 手柄控制说明

@@ -101,8 +101,10 @@ This repository has three submodules:
   ```
 
 - Do not introduce hard-coded machine IPs, hostnames, or credentials.
-  The single documented example IP (`10.192.1.2` in `README.md`) is
-  an internal example pending owner sign-off — do not propagate it.
+  The `<robot-ip>` token used in `README.md` command examples is a
+  **placeholder** — users substitute their own robot / simulator IP
+  when running. Do not replace it with a real address, and do not
+  propagate hard-coded IPs into other files.
 
 ## Verification before opening a PR
 

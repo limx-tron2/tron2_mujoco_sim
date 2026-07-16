@@ -37,6 +37,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `https://github.com/limx-tron2/tron2-mujoco-sim.git` so the
   documented URL matches the target `limx-tron2` organization for
   the public release.
+- `README.md`, `README_zh-CN.md`, `SECURITY.md`, `CONTRIBUTING.md`,
+  and the `.github/PULL_REQUEST_TEMPLATE.md` note now consistently
+  describe `<robot-ip>` as a placeholder token that users substitute
+  with their own robot / simulator IP. No production or
+  internal-network IP is embedded in this repository.
+
+### Resolved (2026-07-16)
+- **Private-IP handling** — resolved 2026-07-16 per owner decision.
+  All Markdown / YAML command examples now use `<robot-ip>` as a
+  placeholder token. No production IP is embedded in this
+  repository. The sibling `tron2-rl-deploy-ros` retains a
+  documentation-example literal `10.192.1.2` in its source / launch
+  files, declared in that repo's `SECURITY.md`.
 
 ### Pending owner sign-off (blocks first public tag)
 - **Submodule clearance — `robot-description`.** Confirm the pinned
@@ -51,12 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   commit (`17a4b25…`, ⚠ TO CONFIRM exact SHA), the SDK license,
   and re-distribution terms for the wheels under
   `python3/{amd64,aarch64}/limxsdk-*.whl`.
-- **Private IP in `README.md`.** The example `10.192.1.2`
-  (documented as an internal example, pending owner sign-off) must
-  be confirmed as publishable or replaced with a placeholder such
-  as `<robot-ip>` before the first public tag. This release
-  intentionally does **not** rewrite that string; the annotation
-  in `README.md` records the decision as pending.
 - **Committed `__pycache__/` cleanup.** The current tree contains a
   checked-in `__pycache__/` directory. This release only adds it to
   `.gitignore` (which prevents future re-introduction); the actual
