@@ -1,4 +1,6 @@
 [submodule "limxsdk-lowlevel"]
 	path = limxsdk-lowlevel
 	url = https://github.com/limxdynamics/limxsdk-lowlevel.git
-
+[submodule "robot-joystick"]
+	path = robot-joystick
+	url = https://github.com/limxdynamics/robot-joystick.git

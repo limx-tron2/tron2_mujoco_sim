@@ -13,8 +13,9 @@
 
 Contributions are licensed under Apache-2.0. Do not submit confidential
 information or assets that you do not have permission to redistribute. Do not
-vendor `limxsdk-lowlevel`, `robot-description`, binaries, models, datasets, or
-media without an explicit provenance and redistribution review.
+vendor `limxsdk-lowlevel`, `robot-joystick`, `robot-description`, binaries,
+models, datasets, or media without an explicit provenance and redistribution
+review.
 
 Use the pull request template and report security vulnerabilities according to
 `SECURITY.md`, never in a public issue.

@@ -17,6 +17,5 @@ the simulator revision, operating system, Python version, SDK version,
 robot-description revision, and sanitized logs.
 
 Security vulnerabilities must not be reported in a public issue. Follow
-`SECURITY.md`. Problems belonging to `limxsdk-lowlevel` or
+`SECURITY.md`. Problems belonging to `limxsdk-lowlevel`, `robot-joystick`, or
 `robot-description` should be reported to their respective maintainers.
-

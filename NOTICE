@@ -1,5 +1,7 @@
 TRON2 DACH MuJoCo Simulator
 Copyright 2025 LimX Dynamics Technology Co., Ltd.
 
-The limxsdk-lowlevel SDK and robot-description model repository are external
-dependencies and retain their respective copyright and license notices.
+The limxsdk-lowlevel SDK, robot-joystick tool, and robot-description model
+repository are external dependencies. Their contents retain their respective
+copyright notices and applicable upstream terms and are not relicensed by this
+project's Apache License 2.0.

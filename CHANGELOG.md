@@ -8,6 +8,5 @@ This file records user-visible changes to the public project.
 - Support models with and without the two-finger grippers.
 - Route simulated motor, IMU, and gripper communication through
   `limxsdk-lowlevel` simulation-side APIs.
-- Document external checkout requirements for `limxsdk-lowlevel` and
-  `robot-description`.
-
+- Track the approved `limxsdk-lowlevel` and optional `robot-joystick` baselines
+  as Git submodules, while keeping `robot-description` as an external checkout.
