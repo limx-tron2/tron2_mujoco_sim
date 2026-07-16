@@ -52,10 +52,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   files, declared in that repo's `SECURITY.md`.
 
 ### Pending owner sign-off (blocks first public tag)
-- **Submodule clearance — `robot-description`.** Confirm the pinned
-  commit (`8a11c12…`, ⚠ TO CONFIRM exact SHA), the license
-  (expected Apache-2.0 per the sibling repo `NOTICE`), and
-  re-distribution terms. See `THIRD_PARTY_NOTICES.md` §2.
+- **Submodule clearance — `robot-description`.** Pin updated 2026-07-16
+  to `682d513d03f7e3d2a59ae791d50adc5ccb84dd1a` on branch `main` of
+  `github.com/limx-tron2/robot-description` (the LimX open-source
+  clean-snapshot pushed the same day). Anonymous
+  `git clone --recurse-submodules` now succeeds. The **license
+  (expected Apache-2.0 per the sibling repo `NOTICE`) and
+  re-distribution terms** still require legal / mechanical owner
+  sign-off before the first public tag. See `THIRD_PARTY_NOTICES.md` §2.
 - **Submodule clearance — `robot-joystick`.** Confirm the pinned
   commit (`30f69a9…`, ⚠ TO CONFIRM exact SHA), the license, and
   whether the submodule ships pre-built binaries subject to
