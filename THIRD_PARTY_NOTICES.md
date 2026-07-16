@@ -30,15 +30,25 @@ content is **not** copied into this tree; users initialize them with
 commit recorded at the time this scaffolding was written; verify with
 `git submodule status --recursive` before any public tag.
 
-| Submodule | Path | Upstream URL | Pinned commit | License | Re-distribution allowed |
-|-----------|------|--------------|---------------|---------|-------------------------|
-| `robot-description` | `robot-description/` | `https://github.com/limx-tron2/robot-description.git` (branch `develop`) | `8a11c12…` ⚠ TO CONFIRM (exact SHA) | Apache-2.0 (per sibling repo `NOTICE`) ⚠ TO CONFIRM once submodule review lands | ⚠ TO CONFIRM |
-| `robot-joystick` | `robot-joystick/` | `https://github.com/limxdynamics/robot-joystick.git` (branch `main`) | `30f69a9…` ⚠ TO CONFIRM (exact SHA) | ⚠ TO CONFIRM (binary vs. source; likely ships a `robot-joystick` executable) | ⚠ TO CONFIRM |
-| `limxsdk-lowlevel` | `limxsdk-lowlevel/` | `https://github.com/limxdynamics/limxsdk-lowlevel.git` | `17a4b25…` ⚠ TO CONFIRM (exact SHA) | ⚠ TO CONFIRM (SDK wheels under `python3/{amd64,aarch64}/limxsdk-*.whl` — redistribution terms unknown) | ⚠ TO CONFIRM |
+| Submodule | Path | Upstream URL | Pinned commit (full SHA) | Public reachability (2026-07-16) | License | Re-distribution allowed |
+|-----------|------|--------------|--------------------------|-----------------------------------|---------|-------------------------|
+| `robot-description` | `robot-description/` | `https://github.com/limx-tron2/robot-description.git` (branch `develop`) | `8a11c12c7851a104dc4cafff1780276f624d2bc6` | ⚠ **PIN NOT ADVERTISED on public upstream** — `git ls-remote` on `github.com/limx-tron2/robot-description` returns only `refs/heads/main` and `refs/heads/feature/grasper`; there is no `develop` branch and the pinned commit is not in the advertised refs. Anonymous `git clone --recurse-submodules` from a public consumer will fail here. Owner must either (a) push the `develop` branch or the pinned commit to the public repository, or (b) point `.gitmodules` at a different upstream (e.g. internal GitLab). | Apache-2.0 (per sibling repo `NOTICE`) ⚠ TO CONFIRM once submodule review lands | ⚠ TO CONFIRM |
+| `robot-joystick` | `robot-joystick/` | `https://github.com/limxdynamics/robot-joystick.git` (branch `main`) | `30f69a9b3cba545a23ecf3f28f4e5ae6c78479cd` | ✅ pin is the current `refs/heads/main` HEAD on the public upstream (`git ls-remote`) — anonymous clone succeeds. | ⚠ TO CONFIRM (binary vs. source; likely ships a `robot-joystick` executable) | ⚠ TO CONFIRM |
+| `limxsdk-lowlevel` | `limxsdk-lowlevel/` | `https://github.com/limxdynamics/limxsdk-lowlevel.git` | `17a4b25d40d3a71435d2144ac668e72784cc4179` | ✅ pin corresponds to upstream tag **`2.2.0`** on the public repository — anonymous clone succeeds. | ⚠ TO CONFIRM (SDK wheels under `python3/{amd64,aarch64}/limxsdk-*.whl` — redistribution terms unknown) | ⚠ TO CONFIRM |
+
+Reproduce the reachability probe:
+
+```bash
+git ls-remote https://github.com/limx-tron2/robot-description.git | head
+git ls-remote https://github.com/limxdynamics/robot-joystick.git | head
+git ls-remote https://github.com/limxdynamics/limxsdk-lowlevel.git | grep 17a4b25d
+```
 
 **Owner action required (per submodule):**
 
 - Confirm the upstream repository is public and intended to remain so.
+- **`robot-description`: resolve the pin-not-reachable issue above
+  before public tag** — this blocks anonymous `--recurse-submodules`.
 - Record the license identifier (SPDX) and re-distribution terms.
 - Record whether the submodule ships pre-built binaries (`.whl`,
   `.so`, or a stand-alone executable) that are subject to additional
